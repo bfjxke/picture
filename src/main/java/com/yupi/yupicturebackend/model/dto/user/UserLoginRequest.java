@@ -1,0 +1,23 @@
+package com.yupi.yupicturebackend.model.dto.user;
+
+import lombok.Data;
+
+import java.io.Serializable;
+
+/**
+ * 用户注册请求
+ */
+@Data
+public class UserLoginRequest implements Serializable {
+
+    //序列化前后通过整个id确认是同一个对象
+    private static final long serialVersionUID = 8735650154179439661L;
+
+    //账号
+    private String userAccount;
+
+    //密码
+    private String userPassword;
+
+
+}

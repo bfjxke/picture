@@ -12,6 +12,7 @@ public class MainController {
  
  @GetMapping("/health")
  public BaseResponse<String> health() {
- return ResultUtils.success("ok");
+
+     return ResultUtils.success("ok");
  }
 }

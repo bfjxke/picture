@@ -1,17 +1,20 @@
-serve:
-  port: 8123
 server:
+  port: 8123
   servlet:
     context-path: /api
 spring:
-  spplication:
+  application:
     name: yu-picture-backend
     #数据库
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost；3306/yu-picture
+    url: jdbc:mysql://localhost:3306/yu-picture
     username: root
     password: 4321
+    #开放更大的文件体积
+  servlet:
+    multipart:
+      max-file-size: 10MB
 mybatis-plus:
   configuration:
     # MyBatis 配置
@@ -20,9 +23,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      login-delete-filed: isDelete #全局逻辑删除字段
-      login-delete-value: 1 #逻辑已删除值
-      login-not-delete-value: 0 #逻辑未删除值
+      logic-delete-field: isDelete #全局逻辑删除字段
+      logic-delete-value: 1 #逻辑已删除值
+      logic-not-delete-value: 0 #逻辑未删除值
 
 knife4j:
   enable: true
@@ -34,4 +37,12 @@ knife4j:
         group-name: 默认分组
         api-rule: package
         api-rule-resources:
-          - com.yupi.yupicturebackend.Controller
+          - com.yupi.yupicturebackend.controller
+#对象存储配置
+cos:
+  client:
+    host: "https://yupi2-1406977879.cos.ap-chengdu.myqcloud.com"
+    region: "ap-chengdu"
+    bucket: "yupi2-1406977879"
+    secretId: ${secretId}
+    secretKey: ${secretKey}
