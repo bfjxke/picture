@@ -10,7 +10,7 @@ import com.yupi.yupicturebackend.constant.UserConstant;
 import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.exception.ThrowUtils;
-import com.yupi.yupicturebackend.model.dto.user.UserQueryRequset;
+import com.yupi.yupicturebackend.model.dto.user.UserQueryRequest;
 import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.model.enums.UserRoleEnum;
 import com.yupi.yupicturebackend.model.vo.LoginUserVO;
@@ -158,17 +158,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
     @Override
-    public QueryWrapper<User> getQueryWrapper(UserQueryRequset userQueryRequset) {
-        if (userQueryRequset == null) {
+    public QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest) {
+        if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
         }
-        Long id = userQueryRequset.getId();
-        String userName = userQueryRequset.getUserName();
-        String userAccount = userQueryRequset.getUserAccount();
-        String userProfile = userQueryRequset.getUserProfile();
-        String userRole = userQueryRequset.getUserRole();
-        String sortField = userQueryRequset.getSortField();
-        String sortOrder = userQueryRequset.getSortOrder();
+        Long id = userQueryRequest.getId();
+        String userName = userQueryRequest.getUserName();
+        String userAccount = userQueryRequest.getUserAccount();
+        String userProfile = userQueryRequest.getUserProfile();
+        String userRole = userQueryRequest.getUserRole();
+        String sortField = userQueryRequest.getSortField();
+        String sortOrder = userQueryRequest.getSortOrder();
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(ObjUtil.isNotNull(id), "id", id);

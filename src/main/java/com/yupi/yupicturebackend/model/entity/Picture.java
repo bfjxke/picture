@@ -25,6 +25,8 @@ public class Picture {
      */
     private String url;
 
+    private String thumbnailUrl; // 缩略图UR
+
     /**
      * 图片名称
      */
@@ -76,6 +78,11 @@ public class Picture {
     private Long userId;
 
     /**
+     * 空间id
+     */
+    private Long spaceId;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -95,6 +102,27 @@ public class Picture {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     * 审核状态:0-待审核;1-通过;2-拒绝
+     */
+    private Integer reviewStatus;
+
+    /**
+     * 审核信息
+     */
+    private String reviewMessage;
+
+    /**
+     * 审核人 ID
+     */
+    private Long reviewerId;
+
+    /**
+     * 审核时间
+     */
+    private Date reviewTime;
+
 
     @TableField(exist = false)
     private static final long seriaVersionUID = 1L;

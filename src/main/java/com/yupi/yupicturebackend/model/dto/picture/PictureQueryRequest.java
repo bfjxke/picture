@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,6 +13,15 @@ import java.util.List;
 public class PictureQueryRequest extends PageRequest implements Serializable {
     //id
     private Long id;
+    /**
+     * 空间id
+     */
+    private Long spaceId;
+
+    /**
+     * 是否只查询spaceId为null的图片
+     */
+    private boolean nullSpaceId;
     //图片名称
     private String name;
     //*简介
@@ -33,6 +43,26 @@ public class PictureQueryRequest extends PageRequest implements Serializable {
     private String picFormat;
     //搜索词(同时搜名称、简介等)
     private String searchText;
+
+    /**
+     * 审核状态:0-待审核;1-通过;2-拒绝
+     */
+    private Integer reviewStatus;
+
+    /**
+     * 审核信息
+     */
+    private String reviewMessage;
+
+    /**
+     * 审核人 ID
+     */
+    private Long reviewerId;
+
+    /**
+     * 审核时间
+     */
+    private Date reviewTime;
 
     //*用户id
     private Long userId;

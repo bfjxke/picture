@@ -2,6 +2,10 @@ server:
   port: 8123
   servlet:
     context-path: /api
+    #cook 30天过期
+    session:
+      cookie:
+        max-age: 2592000
 spring:
   application:
     name: yu-picture-backend
@@ -11,7 +15,18 @@ spring:
     url: jdbc:mysql://localhost:3306/yu-picture
     username: root
     password: 4321
-    #开放更大的文件体积
+  # redsi 配置
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+  #Session配置
+  session:
+    store-type: redis
+    # session 30 天后过期
+    timeout: 2592000
+  #开放更大的文件体积
   servlet:
     multipart:
       max-file-size: 10MB

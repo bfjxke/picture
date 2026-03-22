@@ -1,7 +1,7 @@
 package com.yupi.yupicturebackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yupi.yupicturebackend.model.dto.user.UserQueryRequset;
+import com.yupi.yupicturebackend.model.dto.user.UserQueryRequest;
 import com.yupi.yupicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yupi.yupicturebackend.model.vo.LoginUserVO;
@@ -42,7 +42,7 @@ public interface UserService extends IService<User> {
     boolean userLogout(HttpServletRequest request);
 
     //获取查询条件
-    QueryWrapper<User> getQueryWrapper(UserQueryRequset userQueryRequset);
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
     //判断是否为管理员
     Boolean isAdmin(User user);

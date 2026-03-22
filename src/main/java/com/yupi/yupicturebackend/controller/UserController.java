@@ -2,7 +2,7 @@ package com.yupi.yupicturebackend.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yupi.yupicturebackend.annoation.AuthCheck;
+import com.yupi.yupicturebackend.annotation.AuthCheck;
 import com.yupi.yupicturebackend.common.BaseResponse;
 import com.yupi.yupicturebackend.common.DeleteRequest;
 import com.yupi.yupicturebackend.common.ResultUtils;
@@ -132,15 +132,15 @@ public class UserController {
     }
 
 
-    @PostMapping("/list/page/vo")//此处用Post原因：方便用自定义的UserQueryRequset
+    @PostMapping("/list/page/vo")//此处用Post原因：方便用自定义的UserQueryRequest
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequset userQueryRequset) {
-        ThrowUtils.throwIf(userQueryRequset == null, ErrorCode.PARAMS_ERROR);
-        long current = userQueryRequset.getCurrent();
-        long pageSize = userQueryRequset.getPageSize();
+    public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
+        ThrowUtils.throwIf(userQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        long current = userQueryRequest.getCurrent();
+        long pageSize = userQueryRequest.getPageSize();
 
         Page<User> userPage = userService.page(new Page<>(current, pageSize)//userService自带的分页
-                , userService.getQueryWrapper(userQueryRequset));//这个参数是查询条件（转成需要的格式）
+                , userService.getQueryWrapper(userQueryRequest));//这个参数是查询条件（转成需要的格式）
         Page<UserVO> userVOPage = new Page<>(current, pageSize, userPage.getTotal());//创建需要的Page格式和规格
         userVOPage.setRecords(userService.getUserVOList(userPage.getRecords()));//导入数据
         return ResultUtils.success(userVOPage);

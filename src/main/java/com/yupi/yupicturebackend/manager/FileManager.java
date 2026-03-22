@@ -1,14 +1,12 @@
-package com.yupi.yupicturebackend.mananger;
+package com.yupi.yupicturebackend.manager;
 
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.qcloud.cos.COSClient;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.model.ciModel.persistence.ImageInfo;
-import com.yupi.yupicturebackend.common.ResultUtils;
 import com.yupi.yupicturebackend.config.CosClientConfig;
 import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
@@ -27,9 +25,11 @@ import java.util.Date;
 import java.util.List;
 
 
+//文件服务
+//@deprecated 已废弃，改为使用 upload 包的模板方法优
 @Slf4j
 @Service
-@Component
+@Deprecated
 public class FileManager {
 
     @Resource

@@ -1,4 +1,4 @@
-package com.yupi.yupicturebackend.annoation;
+package com.yupi.yupicturebackend.annotation;
 
 
 import java.lang.annotation.ElementType;

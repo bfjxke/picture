@@ -18,6 +18,8 @@ public class PictureVO implements Serializable {
     //图片url
     private String url;
 
+    private String thumbnailUrl; // 缩略图UR
+
     //图片名称
     private String name;
     //简介
@@ -40,6 +42,12 @@ public class PictureVO implements Serializable {
     private String picFormat;
     //用户id
     private Long userId;
+
+    /**
+     * 空间id
+     */
+    private Long spaceId;
+
     //创建时间
     private Date createTime;
 

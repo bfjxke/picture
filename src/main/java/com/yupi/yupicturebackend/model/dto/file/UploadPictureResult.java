@@ -6,6 +6,9 @@ import lombok.Data;
 public class UploadPictureResult {
     //图片地址
     private String url;
+
+    private String thumbnailUrl; // 缩略图UR
+
     //图片名称
     private String picName;
     //文件体积
