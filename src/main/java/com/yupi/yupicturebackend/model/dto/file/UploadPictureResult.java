@@ -15,6 +15,10 @@ public class UploadPictureResult {
     private Long picSize;
     //图片宽度
     private int picWidth;
+    /**
+     * 图片主色调
+     */
+    private String picColor;
     //图片高度
     private int picHeight;
     //图片宽高比

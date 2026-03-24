@@ -10,6 +10,7 @@ import com.yupi.yupicturebackend.model.vo.PictureVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author ertstyuqk
@@ -81,4 +82,8 @@ public interface PictureService extends IService<Picture> {
   *校验空间图片权限(用户能不能看到这张图片)
   */
  void checkPictureAuth(User loginUser,Picture picture);
+
+
+ List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
+
 }
