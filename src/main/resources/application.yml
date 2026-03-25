@@ -61,3 +61,7 @@ cos:
     bucket: "yupi2-1406977879"
     secretId: ${secretId}
     secretKey: ${secretKey}
+
+#阿里云ai
+aliYunAi:
+  apiKey: ${apiKey}

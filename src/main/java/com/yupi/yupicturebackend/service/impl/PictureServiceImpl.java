@@ -1,7 +1,6 @@
 package com.yupi.yupicturebackend.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.img.ColorUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -587,6 +586,68 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
                 .map(PictureVO::objToVo)
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    public void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser){
+        //1.获取和校验参数
+        List<Long> pictureIdList = pictureEditByBatchRequest.getPictureIdList();
+        Long spaceId = pictureEditByBatchRequest.getSpaceId();
+        String category = pictureEditByBatchRequest.getCategory();
+        List<String> tags = pictureEditByBatchRequest.getTags();
+        ThrowUtils.throwIf(CollUtil.isEmpty(pictureIdList), ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf( spaceId == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf( loginUser == null, ErrorCode.NO_AUTH_ERROR);
+        //2.校验空间权限
+        Space space = spaceService.getById(spaceId);
+        ThrowUtils.throwIf( space == null, ErrorCode. NOT_FOUND_ERROR,"空间不存在");
+        if (!space.getUserId().equals(loginUser.getId())) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"没有空间访问权限");
+        }
+        //3.查询指定图片（仅选择需要的字段）
+        List<Picture> pictureList = this.lambdaQuery().select(Picture::getId, Picture::getSpaceId)
+                .eq(Picture::getSpaceId, spaceId)
+                .in(Picture::getId, pictureIdList)
+                .list();
+        if(CollUtil.isEmpty(pictureList)){
+            return;
+        }
+        //4.更修分类和标签
+        pictureList.forEach(picture -> {
+            if (StrUtil.isNotBlank(category)) {
+                picture.setCategory(category);
+            }
+            if (CollUtil.isNotEmpty(tags)) {
+                picture.setTags(JSONUtil.toJsonStr(tags));
+            }
+        });
+        //批量重命名
+
+        //5.操作数据库进行批量更新
+        boolean result = this.updateBatchById(pictureList);
+        ThrowUtils. throwIf(!result,ErrorCode.OPERATION_ERROR);
+    }
+
+    /**
+     * nameRule格式：图片{序号}
+     * @param pictureList
+     * @param nameRule
+     */
+    private void fillPictureWithNameRule(List<Picture> pictureList,String nameRule){
+        if (StrUtil.isBlank(nameRule)||CollUtil.isEmpty(pictureList)){
+            return;
+        }
+        long count=1;
+        try {
+            for (Picture picture : pictureList) {
+                picture.setName(nameRule.replaceAll("\\{序号}",String.valueOf(count++)));
+            }
+        } catch (Exception e) {
+            log.error("名称解析错误",e);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR,"名称解析错误");
+        }
+    }
+
 
 
 }

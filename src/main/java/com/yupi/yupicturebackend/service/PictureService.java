@@ -86,4 +86,5 @@ public interface PictureService extends IService<Picture> {
 
  List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
 
+ void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
 }
