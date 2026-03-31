@@ -13,11 +13,13 @@ import com.yupi.yupicturebackend.mapper.SpaceMapper;
 import com.yupi.yupicturebackend.model.dto.space.SpaceAddRequest;
 import com.yupi.yupicturebackend.model.dto.space.SpaceQueryRequest;
 import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceAnalyzeRequest;
+import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceUsageAnalyzeRequest;
 import com.yupi.yupicturebackend.model.entity.Space;
 import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.model.enums.SpaceLevelEnum;
 import com.yupi.yupicturebackend.model.vo.SpaceVO;
 import com.yupi.yupicturebackend.model.vo.UserVO;
+import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceUsageAnalyzeResponse;
 import com.yupi.yupicturebackend.service.SpaceAnalyzeService;
 import com.yupi.yupicturebackend.service.SpaceService;
 import com.yupi.yupicturebackend.service.UserService;
@@ -45,6 +47,21 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space>
     @Resource
     private SpaceService spaceService;
 
+
+    @Override
+    public SpaceUsageAnalyzeResponse getSpaceUsageAnalyze(SpaceUsageAnalyzeRequest spaceUsageAnalyzeRequest, User loginUser) {
+        //校验参数
+
+        //全空间或公共空间需要从picture表查询
+
+        //私人空间从space表查询
+
+
+        return null;
+    }
+
+
+
     /**
      * 校验空间分析权限
      */
@@ -70,8 +87,22 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space>
      * @param queryWrapper
      */
     private void fileAnalyzeQueryWrapper(SpaceAnalyzeRequest spaceAnalyzeRequest, QueryWrapper<Space> queryWrapper) {
-
-
+        //查询全部
+        boolean queryAll = spaceAnalyzeRequest.isQueryAll();
+        if(queryAll) return;
+        //公共图库
+        boolean queryPublic = spaceAnalyzeRequest.isQueryPublic();
+        if(queryPublic){
+            queryWrapper.isNull("spaceId");
+            return;
+        }
+        //私有图库
+        Long spaceId = spaceAnalyzeRequest.getSpaceId();
+        if(spaceId!=null){
+            queryWrapper.eq("spaceId", spaceId);
+            return;
+        }
+        throw new BusinessException(ErrorCode.PARAMS_ERROR,"未指定查寻范围")
     }
 
 
