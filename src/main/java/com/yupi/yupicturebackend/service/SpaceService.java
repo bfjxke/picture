@@ -4,12 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yupi.yupicturebackend.model.dto.space.SpaceAddRequest;
 import com.yupi.yupicturebackend.model.dto.space.SpaceQueryRequest;
+import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceCategoryAnalyzeRequest;
+import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceTagAnalyzeRequest;
 import com.yupi.yupicturebackend.model.entity.Space;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.model.vo.SpaceVO;
+import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceCategoryAnalyzeResponse;
+import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceTagAnalyzeResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author ertstyuqk
@@ -33,6 +38,7 @@ public interface SpaceService extends IService<Space> {
 
     Page<SpaceVO> getSpaceVOPage(Page<Space> spacePage, HttpServletRequest request);
 
+
     //获取查询对象
     QueryWrapper<Space> getQueryWrapper(SpaceQueryRequest spaceQueryRequest);
 
@@ -48,5 +54,6 @@ public interface SpaceService extends IService<Space> {
      * 校验空间权限
      */
     void checkSpaceAuth( User loginUser,Space space);
+
 
 }
