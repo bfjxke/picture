@@ -4,15 +4,10 @@ import com.yupi.yupicturebackend.common.BaseResponse;
 import com.yupi.yupicturebackend.common.ResultUtils;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.exception.ThrowUtils;
-import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceCategoryAnalyzeRequest;
-import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceSizeAnalyzeRequest;
-import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceTagAnalyzeRequest;
-import com.yupi.yupicturebackend.model.dto.space.analyze.SpaceUsageAnalyzeRequest;
+import com.yupi.yupicturebackend.model.dto.space.analyze.*;
+import com.yupi.yupicturebackend.model.entity.Space;
 import com.yupi.yupicturebackend.model.entity.User;
-import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceCategoryAnalyzeResponse;
-import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceSizeAnalyzeResponse;
-import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceTagAnalyzeResponse;
-import com.yupi.yupicturebackend.model.vo.space.analyze.SpaceUsageAnalyzeResponse;
+import com.yupi.yupicturebackend.model.vo.space.analyze.*;
 import com.yupi.yupicturebackend.service.SpaceAnalyzeService;
 import com.yupi.yupicturebackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -107,8 +102,37 @@ public class SpaceAnalyzeController {
     }
 
 
+    /**
+     * 获取空间用户行为分析
+     *
+     * @param spaceUserAnalyzeRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/user")
+    public BaseResponse<List<SpaceUserAnalyzeResponse>> getSpaceUserAnalyze(@RequestBody SpaceUserAnalyzeRequest spaceUserAnalyzeRequest,
+                                                                            HttpServletRequest request) {
+        ThrowUtils.throwIf(spaceUserAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        List<SpaceUserAnalyzeResponse> resultList = spaceAnalyzeService.getSpaceUserAnalyze(spaceUserAnalyzeRequest, loginUser);
+        return ResultUtils.success(resultList);
+    }
 
 
 
-
+    /**
+     * 获取空间使用排行分析
+     *
+     * @param spaceRankAnalyzeRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/rank")
+    public BaseResponse<List<Space>> getSpaceRankAnalyze(@RequestBody SpaceRankAnalyzeRequest spaceRankAnalyzeRequest,
+                                                         HttpServletRequest request) {
+        ThrowUtils.throwIf(spaceRankAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        List<Space> resultList = spaceAnalyzeService.getSpaceRankAnalyze(spaceRankAnalyzeRequest, loginUser);
+        return ResultUtils.success(resultList);
+    }
 }

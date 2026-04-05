@@ -33,8 +33,6 @@ public interface SpaceAnalyzeService extends IService<Space> {
     List<SpaceCategoryAnalyzeResponse> getSpaceCategoryAnalyze(SpaceCategoryAnalyzeRequest spaceCategoryAnalyzeRequest, User loginUser);
 
 
-    List<SpaceTagAnalyzeResponse> getSpaceTagAnalyze(SpaceTagAnalyzeRequest spaceTagAnalyzeRequest);
-
     /**
      * 获取空间图片标签分析
      *
@@ -64,4 +62,12 @@ public interface SpaceAnalyzeService extends IService<Space> {
     List<SpaceUserAnalyzeResponse> getSpaceUserAnalyze(SpaceUserAnalyzeRequest spaceUserAnalyzeRequest, User loginUser);
 
 
+    /**
+     * 空间使用排行分析（仅管理员）
+     *
+     * @param spaceRankAnalyzeRequest
+     * @param loginUser
+     * @return
+     */
+    List<Space> getSpaceRankAnalyze(SpaceRankAnalyzeRequest spaceRankAnalyzeRequest, User loginUser);
 }

@@ -17,7 +17,12 @@ public class SpaceVO implements Serializable {
     private String spaceName;
 
     // 空间级别:0-普通版1-专业版 2-旗舰版
-    private Integer spacelevel;
+    private Integer spaceLevel;
+
+    /**
+     * 空间类型 0-私有空间 1-团队空间
+     */
+    private Integer spaceType;
 
     //空间图片的最大总大小
     private Long maxSize;
@@ -33,7 +38,6 @@ public class SpaceVO implements Serializable {
 
     //创建用户 id
     private Long userId;
-
 
 
     //创建时间

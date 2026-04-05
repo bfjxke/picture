@@ -206,9 +206,50 @@ public class SpaceAnalyzeServiceImpl extends ServiceImpl<SpaceMapper, Space>
         queryWrapper.eq(ObjUtil.isNotNull(userId), "userId", userId);
 
         // 补充分析维度：每日、每周、每月
+        String timeDimension = spaceUserAnalyzeRequest.getTimeDimension();
+        switch (timeDimension) {
+            case "day":
+                queryWrapper.select("DATE_FORMAT(createTime, '%Y-%m-%d') as period", "count(*) as count");
+                break;
+            case "week":
+                queryWrapper.select("YEARWEEK(createTime) as period", "count(*) as count");
+                break;
+            case "month":
+                queryWrapper.select("DATE_FORMAT(createTime, '%Y-%m') as period", "count(*) as count");
+                break;
+            default:
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "不支持的时间维度");
+        }
 
+        // 分组排序
+        queryWrapper.groupBy("period").orderByAsc("period");
 
-        return List.of();
+        // 查询并封装结果
+        List<Map<String, Object>> queryResult = pictureService.getBaseMapper().selectMaps(queryWrapper);
+        return queryResult
+                .stream()
+                .map(result -> {
+                    String period = result.get("period").toString();
+                    Long count = ((Number) result.get("count")).longValue();
+                    return new SpaceUserAnalyzeResponse(period, count);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Space> getSpaceRankAnalyze(SpaceRankAnalyzeRequest spaceRankAnalyzeRequest, User loginUser) {
+        ThrowUtils.throwIf(spaceRankAnalyzeRequest == null, ErrorCode.PARAMS_ERROR);
+        // 检查权限，仅管理员可以查看
+        ThrowUtils.throwIf(!userService.isAdmin(loginUser), ErrorCode.NO_AUTH_ERROR);
+
+        // 构造查询条件
+        QueryWrapper<Space> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "spaceName", "userId", "totalSize")
+                .orderByDesc("totalSize")
+                .last("limit " + spaceRankAnalyzeRequest.getTopN()); // 取前 N 名
+
+        // 查询并封装结果
+        return spaceService.list(queryWrapper);
     }
 
 
