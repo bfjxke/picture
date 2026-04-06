@@ -10,6 +10,7 @@ import com.yupi.yupicturebackend.constant.UserConstant;
 import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.exception.ThrowUtils;
+import com.yupi.yupicturebackend.manager.auth.StpKit;
 import com.yupi.yupicturebackend.model.dto.user.UserQueryRequest;
 import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.model.enums.UserRoleEnum;
@@ -113,9 +114,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ThrowUtils.throwIf(user == null, ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
 
         //4.保存用户的登录态
-        request.getSession().setAttribute("user_login_state", user);
-
-
+        request.getSession().setAttribute(UserConstant.USER_L0GIN_STATE, user);
+        //保存用户态到Sa-token里，便于空间鉴权时使用，此处过期时间要和SpringSession保持一致
+        StpKit.SPACE.login(user.getId());
+        StpKit.SPACE.getSession().set(UserConstant.USER_L0GIN_STATE, user);
         return this.getLoginUserVO(user);
     }
 
