@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,11 @@ public class PictureVO implements Serializable {
     private Integer picHeight;
     //图片比例
     private Double picScale;
+    /**
+     * 权限列表
+     */
+    private List<String>permissionList=new ArrayList<>();
+
     //图片格式
     private String picFormat;
     //用户id

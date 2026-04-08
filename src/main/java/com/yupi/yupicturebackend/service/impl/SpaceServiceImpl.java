@@ -45,8 +45,6 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
     @Resource
     private TransactionTemplate transactionTemplate;
     @Resource
-    private SpaceService spaceService;
-    @Resource
     private SpaceUserService spaceUserService;
 
     @Override
