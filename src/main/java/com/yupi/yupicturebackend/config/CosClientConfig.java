@@ -49,7 +49,7 @@ public class CosClientConfig {
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
         // 2 设置 bucket 的地域,COS 地域的简称请参见 https://cloud.tencent.com/document/product/436/6224
         // clientConfig中包含了设置region，https(默认http)，超时，代理等 set 方法，使用可参见源码或者常见问题 Java SDK部分
-        Region region = new Region("COS_REGION");
+        Region region = new Region(this.region);
         ClientConfig clientConfig = new ClientConfig(region);
         //这里建议设置使用https 协议
         //从5.6.54 版本开始，默认使用了 https

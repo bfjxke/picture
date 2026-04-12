@@ -10,6 +10,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
+import com.yupi.yupicturebackend.constant.UserConstant;
 import com.yupi.yupicturebackend.exception.BusinessException;
 import com.yupi.yupicturebackend.exception.ErrorCode;
 import com.yupi.yupicturebackend.manager.auth.model.SpaceUserPermissionConstant;
@@ -32,7 +33,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-import static com.yupi.yupicturebackend.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 自定义权限加载接口实现类
@@ -77,7 +77,7 @@ public class StpInterfaceImpl implements StpInterface {
             return ADMIN_PERMISSIONS;
         }
         // 获取 userId
-        User loginUser = (User) StpKit.SPACE.getSessionByLoginId(loginId).get(USER_LOGIN_STATE);
+        User loginUser = (User) StpKit.SPACE.getSessionByLoginId(loginId).get(UserConstant.USER_L0GIN_STATE);
         if (loginUser == null) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "用户未登录");
         }

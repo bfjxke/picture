@@ -2,6 +2,7 @@ package com.yupi.yupicturebackend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import lombok.Data;
@@ -13,7 +14,7 @@ import lombok.Data;
  */
 @TableName(value = "picture")
 @Data
-public class Picture {
+public class Picture implements Serializable {
     /**
      * id
      */
