@@ -28,7 +28,7 @@ import java.util.Map;
  * WebSocket拦截器,建立连接前要先校验
  */
 @Slf4j
-public class WsHandShakeInterceptor implements HandshakeInterceptor {
+public class WsHandshakeInterceptor implements HandshakeInterceptor {
     @Resource
     private UserService userService;
 

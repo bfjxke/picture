@@ -48,9 +48,11 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
     private TransactionTemplate transactionTemplate;
     @Resource
     private SpaceUserService spaceUserService;
-    @Resource
-    @Lazy
-    private DynamicShardingManager dynamicShardingManager;
+
+    //为了方便部署，暂时注释
+//    @Resource
+//    @Lazy
+//    private DynamicShardingManager dynamicShardingManager;
 
     @Override
     public long addSpace(SpaceAddRequest spaceAddRequest, User loginUser) {
@@ -97,8 +99,9 @@ public class SpaceServiceImpl extends ServiceImpl<SpaceMapper, Space>
                     result = spaceUserService.save(spaceUser);
                     ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "保存空间成员记录失败");
                 }
-                //创建新表
-                dynamicShardingManager.createSpacePictureTable(space);
+                //为了方便部署，暂时注释
+                //创建新表（仅团队空间）
+                //dynamicShardingManager.createSpacePictureTable(space);
                 // 返回新写入的数据 id
                 return space.getId();
             });
