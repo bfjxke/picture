@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.yupi.yupicturebackend.manager.websocket.disruptor.PictureEditEventProducer;
 import com.yupi.yupicturebackend.manager.websocket.model.PictureEditActionEnum;
 import com.yupi.yupicturebackend.manager.websocket.model.PictureEditMessageTypeEnum;
 import com.yupi.yupicturebackend.manager.websocket.model.PictureEditRequestMessage;
@@ -12,6 +13,7 @@ import com.yupi.yupicturebackend.manager.websocket.model.PictureEditResponseMess
 import com.yupi.yupicturebackend.model.entity.User;
 import com.yupi.yupicturebackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -25,7 +27,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 图片编辑webSocket处理器
+ * 图片编辑 WebSocket 处理器
  */
 @Component
 @Slf4j
@@ -34,12 +36,15 @@ public class PictureEditHandler extends TextWebSocketHandler {
     @Resource
     private UserService userService;
 
+    @Resource
+    @Lazy
+    private PictureEditEventProducer pictureEditEventProducer;
+
     // 每张图片的编辑状态，key: pictureId, value: 当前正在编辑的用户 ID
     private final Map<Long, Long> pictureEditingUsers = new ConcurrentHashMap<>();
 
     // 保存所有连接的会话，key: pictureId, value: 用户会话集合
     private final Map<Long, Set<WebSocketSession>> pictureSessions = new ConcurrentHashMap<>();
-
 
     /**
      * 连接建立成功
@@ -62,29 +67,8 @@ public class PictureEditHandler extends TextWebSocketHandler {
         pictureEditResponseMessage.setMessage(message);
         pictureEditResponseMessage.setUser(userService.getUserVO(user));
         // 广播给所有用户
-        broadcastToPicture(pictureId,pictureEditResponseMessage);
+        broadcastToPicture(pictureId, pictureEditResponseMessage);
     }
-
-
-    /**
-     * 收到前端发送的消息，根据消息类别处理消息
-     *
-     * @param session
-     * @param message
-     * @throws Exception
-     */
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        super.handleTextMessage(session, message);
-        // 获取消息内容，将 JSON 转换为 PictureEditRequestMessage
-        PictureEditRequestMessage pictureEditRequestMessage = JSONUtil.toBean(message.getPayload(), PictureEditRequestMessage.class);
-        // 从 Session 属性中获取到公共参数
-        User user = (User) session.getAttributes().get("user");
-        Long pictureId = (Long) session.getAttributes().get("pictureId");
-        // 根据消息类型处理消息（生产消息到 Disruptor 环形队列中）
-        pictureEditEventProducer.publishEvent(pictureEditRequestMessage, session, user, pictureId);
-    }
-
 
     /**
      * 收到前端发送的消息，根据消息类别处理消息
@@ -161,7 +145,6 @@ public class PictureEditHandler extends TextWebSocketHandler {
     }
 
 
-
     /**
      * 退出编辑状态
      *
@@ -186,8 +169,6 @@ public class PictureEditHandler extends TextWebSocketHandler {
             broadcastToPicture(pictureId, pictureEditResponseMessage);
         }
     }
-
-
 
     /**
      * 关闭连接
@@ -221,7 +202,6 @@ public class PictureEditHandler extends TextWebSocketHandler {
         broadcastToPicture(pictureId, pictureEditResponseMessage);
     }
 
-
     /**
      * 广播给该图片的所有用户（支持排除掉某个 Session）
      *
@@ -233,7 +213,7 @@ public class PictureEditHandler extends TextWebSocketHandler {
         Set<WebSocketSession> sessionSet = pictureSessions.get(pictureId);
         if (CollUtil.isNotEmpty(sessionSet)) {
             // 创建 ObjectMapper
-            ObjectMapper objectMapper = new ObjectMapper();//Jackson的包
+            ObjectMapper objectMapper = new ObjectMapper();
             // 配置序列化：将 Long 类型转为 String，解决丢失精度问题
             SimpleModule module = new SimpleModule();
             module.addSerializer(Long.class, ToStringSerializer.instance);
@@ -254,7 +234,6 @@ public class PictureEditHandler extends TextWebSocketHandler {
         }
     }
 
-
     /**
      * 广播给该图片的所有用户
      *
@@ -264,6 +243,5 @@ public class PictureEditHandler extends TextWebSocketHandler {
     private void broadcastToPicture(Long pictureId, PictureEditResponseMessage pictureEditResponseMessage) throws IOException {
         broadcastToPicture(pictureId, pictureEditResponseMessage, null);
     }
-
-
 }
+
